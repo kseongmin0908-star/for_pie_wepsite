@@ -351,7 +351,7 @@
   }
 </script>
 <!-- Background music -->
-<audio id="bgm" loop preload="auto"><source src="music/bgm.mp3" type="audio/mpeg"></audio>
+<audio id="bgm" loop preload="metadata"><source src="music/bgm.mp3" type="audio/mpeg"></audio>
 <button id="musicBtn" aria-label="카페 음악 켜기/끄기" title="카페 음악">
   <span class="m-eq"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span></span>
   <span class="m-label">cafe music</span>
@@ -382,7 +382,7 @@
     const a=document.getElementById('bgm'), btn=document.getElementById('musicBtn');
     a.volume=0; const TARGET=0.35;
     // reveal the button only if a real track is present
-    a.addEventListener('canplaythrough',function(){btn.style.display='flex';btn.classList.add('idle');},{once:true});
+    a.addEventListener('loadedmetadata',function(){btn.style.display='flex';btn.classList.add('idle');},{once:true});
     a.addEventListener('error',function(){btn.style.display='none';});
     let t;
     function fade(to,then){clearInterval(t);t=setInterval(function(){const d=to-a.volume;if(Math.abs(d)<0.02){a.volume=to;clearInterval(t);if(then)then();return;}a.volume+=d*0.12;},40);}
