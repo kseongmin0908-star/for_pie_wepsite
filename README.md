@@ -18,5 +18,9 @@
 - 🕐 매일 11:00 – 18:00 (휴무·변동은 인스타그램 공지)
 - 📷 Instagram [@forpie_cafe](https://www.instagram.com/forpie_cafe/)
 
+## 배경음악
+- 🎵 *Mas Cafe* — Casa Rosa (YouTube 오디오 보관함)
+- 오른쪽 아래 `cafe music` 버튼을 누르면 재생됩니다.
+
 ---
 *Piece for you.*
