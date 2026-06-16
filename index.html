@@ -350,5 +350,48 @@
     wrap.appendChild(p);
   }
 </script>
+<!-- Background music -->
+<audio id="bgm" loop preload="auto"><source src="music/bgm.mp3" type="audio/mpeg"></audio>
+<button id="musicBtn" aria-label="카페 음악 켜기/끄기" title="카페 음악">
+  <span class="m-eq"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span></span>
+  <span class="m-label">cafe music</span>
+</button>
+<style>
+  #musicBtn{position:fixed;right:22px;bottom:22px;z-index:1500;height:54px;padding:0 18px 0 18px;border:none;border-radius:40px;
+    background:var(--leaf-deep);color:#fff;cursor:pointer;display:none;align-items:center;gap:11px;
+    font-family:var(--display);font-style:italic;font-size:1.05rem;letter-spacing:.02em;
+    box-shadow:0 12px 28px -8px rgba(46,71,30,.6);transition:transform .3s,background .3s}
+  #musicBtn:hover{transform:translateY(-3px);background:var(--coral)}
+  #musicBtn .m-eq{display:flex;align-items:flex-end;gap:3px;height:18px}
+  #musicBtn .bar{width:3px;height:5px;background:#fff;border-radius:2px;transition:height .25s}
+  #musicBtn:not(.playing) .bar:nth-child(1){height:5px}
+  #musicBtn:not(.playing) .bar:nth-child(2){height:13px}
+  #musicBtn:not(.playing) .bar:nth-child(3){height:8px}
+  #musicBtn:not(.playing) .bar:nth-child(4){height:15px}
+  #musicBtn.playing .bar{animation:eq .9s ease-in-out infinite}
+  #musicBtn.playing .bar:nth-child(2){animation-delay:.25s}
+  #musicBtn.playing .bar:nth-child(3){animation-delay:.45s}
+  #musicBtn.playing .bar:nth-child(4){animation-delay:.15s}
+  @keyframes eq{0%,100%{height:4px}50%{height:18px}}
+  #musicBtn.idle{animation:mpulse 2.6s ease-in-out infinite}
+  @keyframes mpulse{0%,100%{box-shadow:0 12px 28px -8px rgba(46,71,30,.6)}50%{box-shadow:0 12px 34px -2px rgba(224,104,63,.7)}}
+  @media(max-width:520px){#musicBtn .m-label{display:none}#musicBtn{padding:0;width:54px;justify-content:center}}
+</style>
+<script>
+  (function(){
+    const a=document.getElementById('bgm'), btn=document.getElementById('musicBtn');
+    a.volume=0; const TARGET=0.35;
+    // reveal the button only if a real track is present
+    a.addEventListener('canplaythrough',function(){btn.style.display='flex';btn.classList.add('idle');},{once:true});
+    a.addEventListener('error',function(){btn.style.display='none';});
+    let t;
+    function fade(to,then){clearInterval(t);t=setInterval(function(){const d=to-a.volume;if(Math.abs(d)<0.02){a.volume=to;clearInterval(t);if(then)then();return;}a.volume+=d*0.12;},40);}
+    btn.addEventListener('click',function(){
+      btn.classList.remove('idle');
+      if(a.paused){a.play().then(function(){btn.classList.add('playing');fade(TARGET);}).catch(function(){});}
+      else{fade(0,function(){a.pause();});btn.classList.remove('playing');}
+    });
+  })();
+</script>
 </body>
 </html>
