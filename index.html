@@ -380,16 +380,21 @@
 <script>
   (function(){
     const a=document.getElementById('bgm'), btn=document.getElementById('musicBtn');
-    a.volume=0; const TARGET=0.35;
-    // reveal the button only if a real track is present
-    a.addEventListener('loadedmetadata',function(){btn.style.display='flex';btn.classList.add('idle');},{once:true});
+    const noVol=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1); // iOS ignores JS volume
+    if(!noVol) a.volume=0; const TARGET=0.4;
+    a.setAttribute('playsinline',''); a.playsInline=true;
+    // a track is bundled — show the button on every device (iOS won't fire load events until tapped)
+    btn.style.display='flex'; btn.classList.add('idle');
     a.addEventListener('error',function(){btn.style.display='none';});
     let t;
-    function fade(to,then){clearInterval(t);t=setInterval(function(){const d=to-a.volume;if(Math.abs(d)<0.02){a.volume=to;clearInterval(t);if(then)then();return;}a.volume+=d*0.12;},40);}
+    function fade(to,then){if(noVol){if(then)then();return;}clearInterval(t);t=setInterval(function(){const d=to-a.volume;if(Math.abs(d)<0.02){a.volume=to;clearInterval(t);if(then)then();return;}a.volume+=d*0.12;},40);}
     btn.addEventListener('click',function(){
       btn.classList.remove('idle');
-      if(a.paused){a.play().then(function(){btn.classList.add('playing');fade(TARGET);}).catch(function(){});}
-      else{fade(0,function(){a.pause();});btn.classList.remove('playing');}
+      if(a.paused){
+        const p=a.play();
+        if(p&&p.then){p.then(function(){btn.classList.add('playing');fade(TARGET);}).catch(function(){btn.classList.remove('playing');});}
+        else{btn.classList.add('playing');fade(TARGET);}
+      } else {fade(0,function(){a.pause();});btn.classList.remove('playing');}
     });
   })();
 </script>
